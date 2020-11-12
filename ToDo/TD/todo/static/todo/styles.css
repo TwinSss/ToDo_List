@@ -1,4 +1,7 @@
 body {
+	margin: 0;
+	padding: 0;
+	height: 100%;
 	background: rgba(44, 62, 80, .8);
 	font-family: 'Oswald', 'Futura', sans-serif;
 }
@@ -30,4 +33,9 @@ footer {
 }
 .glyphicon {
 	color: black;
+}
+#hello-msg{
+	font-size: 18px;
+	color: #fff;
+	margin-right: 20px;
 }
