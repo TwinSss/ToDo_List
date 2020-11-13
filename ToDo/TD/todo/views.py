@@ -7,7 +7,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
-from .models import Todo
+from .models import Todo, Client
 from .forms import TodoForm, CreateUserForm
 from .decorators import unauthenticated_user, allowed_users, admin_only
 
@@ -15,6 +15,7 @@ from .decorators import unauthenticated_user, allowed_users, admin_only
 @login_required(login_url='login')
 @admin_only
 def index(request):
+
     todo_list = Todo.objects.order_by('id')
     form = TodoForm()
     context = {'todo_list': todo_list, 'form': form}
@@ -23,8 +24,9 @@ def index(request):
 
 
 @require_POST
-@allowed_users(allowed_roles=['admin'])
+@allowed_users(allowed_roles=['admin', 'client'])
 def addTodo(request):
+
     form = TodoForm(request.POST)
 
     if form.is_valid():
@@ -35,6 +37,7 @@ def addTodo(request):
 
 @allowed_users(allowed_roles=['admin'])
 def completeTodo(request, todo_id):
+
     todo = Todo.objects.get(pk=todo_id)
     todo.complete = True
     todo.save()
@@ -43,12 +46,14 @@ def completeTodo(request, todo_id):
 
 @allowed_users(allowed_roles=['admin'])
 def deleteCompleted(request):
+
     Todo.objects.filter(complete__exact=True).delete()
 
     return redirect('index')
 
 @allowed_users(allowed_roles=['admin'])
 def deleteAll(request):
+
     Todo.objects.all().delete()
 
     return redirect('index')
@@ -65,6 +70,9 @@ def registerPage(request):
 
             group = Group.objects.get(name='client')
             user.groups.add(group)
+            Client.objects.create(
+                user
+            )
 
             messages.success(request, 'Account was created for' + username)
             return redirect('login')
@@ -93,16 +101,32 @@ def loginPage(request):
 
 
 def logoutUser(request):
+
     logout(request)
     return redirect('login')
 
 @allowed_users(allowed_roles=['admin'])
 def customer(request):
+
     customer = Todo.objects.get(id=pk_test)
     context = {'customer':customer}
     return render(request, 'todo/customer.html', context)
 
 
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['client'])
 def userPage(request):
-	context = {}
-	return render(request, 'todo/user.html', context)
+
+    todo_list = request.user.client.clienttodo_set.all()
+
+    if(request.user.client == 'POST'):
+        form = TodoForm(request.POST)
+        form.save()
+        return redirect('user')
+    
+
+
+    form = TodoForm()
+    context = {'todo_list': todo_list, 'form': form}
+
+    return render(request, 'todo/user.html', context)

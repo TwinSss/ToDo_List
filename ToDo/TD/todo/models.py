@@ -9,7 +9,7 @@ class Todo(models.Model):
 		return self.text
 		
 class Client(models.Model):
-	user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
+	user = models.OneToOneField(User, primary_key = True, on_delete=models.CASCADE) # устанавливаем отношение 1 к 1 между клиентом и пользователем.
 	name = models.CharField(max_length=200, null=True)
 	phone = models.CharField(max_length=200, null=True)
 	email = models.CharField(max_length=200, null=True)
@@ -17,3 +17,11 @@ class Client(models.Model):
 
 	def __str__(self):
 		return self.name
+
+
+class ClientTodo(models.Model):
+	todo = models.ForeignKey(Todo, null=True, on_delete= models.SET_NULL)
+	client = models.ForeignKey(Client, null=True, on_delete= models.SET_NULL)
+
+	def __str__(self):
+		return self.todo.text
