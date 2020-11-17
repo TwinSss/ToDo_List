@@ -9,11 +9,10 @@ urlpatterns = [
     path('logout/', views.logoutUser, name='logout'),
 
     path('', views.index, name='index'),
-    path('user/', views.userPage, name='user-page'),
-    path('customer/<str:pk_test>/', views.customer, name='customer'),
-    
     path('add', views.addTodo, name='add'),
     path('complete/<todo_id>', views.completeTodo, name='complete'),
     path('deletecompleted', views.deleteCompleted, name='deletecomplete'),
-    path('deleteall', views.deleteAll, name='deleteall')
+    path('deleteall', views.deleteAll, name='deleteall'),
+
+    path('customer/<str:pk_test>/', views.customer, name='customer')
 ]

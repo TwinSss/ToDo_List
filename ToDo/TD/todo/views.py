@@ -11,12 +11,12 @@ from .models import Todo, Client
 from .forms import TodoForm, CreateUserForm
 from .decorators import unauthenticated_user, allowed_users, admin_only
 
-
+#@admin_only
 @login_required(login_url='login')
-@admin_only
+@allowed_users(allowed_roles=['admin', 'client'])
 def index(request):
 
-    todo_list = Todo.objects.order_by('id')
+    todo_list = Todo.objects.filter(client_id=Client.objects.get(name=request.user))
     form = TodoForm()
     context = {'todo_list': todo_list, 'form': form}
 
@@ -35,7 +35,7 @@ def addTodo(request):
 
     return redirect('index')
 
-@allowed_users(allowed_roles=['admin'])
+@allowed_users(allowed_roles=['admin', 'client'])
 def completeTodo(request, todo_id):
 
     todo = Todo.objects.get(pk=todo_id)
@@ -44,14 +44,14 @@ def completeTodo(request, todo_id):
 
     return redirect('index')
 
-@allowed_users(allowed_roles=['admin'])
+@allowed_users(allowed_roles=['admin', 'client'])
 def deleteCompleted(request):
 
     Todo.objects.filter(complete__exact=True).delete()
 
     return redirect('index')
 
-@allowed_users(allowed_roles=['admin'])
+@allowed_users(allowed_roles=['admin', 'client'])
 def deleteAll(request):
 
     Todo.objects.all().delete()
@@ -71,8 +71,8 @@ def registerPage(request):
             group = Group.objects.get(name='client')
             user.groups.add(group)
             Client.objects.create(
-                user
-            )
+                user=user,
+				name=user.username,)
 
             messages.success(request, 'Account was created for' + username)
             return redirect('login')
@@ -113,20 +113,3 @@ def customer(request):
     return render(request, 'todo/customer.html', context)
 
 
-@login_required(login_url='login')
-@allowed_users(allowed_roles=['client'])
-def userPage(request):
-
-    todo_list = request.user.client.clienttodo_set.all()
-
-    if(request.user.client == 'POST'):
-        form = TodoForm(request.POST)
-        form.save()
-        return redirect('user')
-    
-
-
-    form = TodoForm()
-    context = {'todo_list': todo_list, 'form': form}
-
-    return render(request, 'todo/user.html', context)
