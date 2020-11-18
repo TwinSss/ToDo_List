@@ -11,6 +11,7 @@ from .models import Todo, Client
 from .forms import TodoForm, CreateUserForm
 from .decorators import unauthenticated_user, allowed_users, admin_only
 
+
 #@admin_only
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['admin', 'client'])
@@ -30,10 +31,11 @@ def addTodo(request):
     form = TodoForm(request.POST)
 
     if form.is_valid():
-        new_todo = Todo(text=request.POST['text'])
-        new_todo.save()
+       new_todo = Todo(text=request.POST['text'], client=Client.objects.get(name=request.user))
+       new_todo.save()
 
     return redirect('index')
+
 
 @allowed_users(allowed_roles=['admin', 'client'])
 def completeTodo(request, todo_id):
@@ -44,6 +46,7 @@ def completeTodo(request, todo_id):
 
     return redirect('index')
 
+
 @allowed_users(allowed_roles=['admin', 'client'])
 def deleteCompleted(request):
 
@@ -51,12 +54,14 @@ def deleteCompleted(request):
 
     return redirect('index')
 
+
 @allowed_users(allowed_roles=['admin', 'client'])
 def deleteAll(request):
 
     Todo.objects.all().delete()
 
     return redirect('index')
+
 
 @unauthenticated_user
 def registerPage(request):
@@ -104,6 +109,7 @@ def logoutUser(request):
 
     logout(request)
     return redirect('login')
+
 
 @allowed_users(allowed_roles=['admin'])
 def customer(request):
