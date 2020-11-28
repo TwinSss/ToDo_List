@@ -12,7 +12,12 @@
 				{% csrf_token %}
 				<div class="form-group">
 					<div class="input-group">
-						 {{ form.text }}
+						<p class="date-completion" id="add-btn">Enter task completion date:{{ form.make_up }} </p>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="input-group">
+						{{ form.text }}	 
 					  <span class="input-group-btn">
 						  <button type="submit" class="btn btn-danger" id="add-btn">ADD</button>
 					  </span>
@@ -32,16 +37,30 @@
 								<i class="glyphicon glyphicon-trash"></i> DELETE ALL
 							</button></a>
 						</div>
+						<div class="btn-group">
+							<a href="{% url 'datecomplete' %}"><button type="button" class="btn btn-danger">
+								<i class="glyphicon glyphicon-trash"></i> CHECK
+							</button></a>
+						</div>
 					</div>
 				</div>
 			</div>
 
+			<!-- <table class="table table-sm">
+				<tr>
+					<th></th>
+					<th>Todo</th>
+					<th>Time</th>
+				</tr>
+			</table> -->
 			<ul class="list-group t20">
 				{% for todo in todo_list %}
 					{% if todo.complete %}
-					<li class="list-group-item todo-completed">{{ todo.text }}</li>
+					<li class="list-group-item todo-completed">{{ todo.text }} <p class="date-created" style="margin-left: 20px;">Date created - {{ todo.date_created|date:"d F Y" }} </p> 
+						<p class="date-created" style="margin-left: 20px;">Date completed - {{ todo.make_up|date:"d F Y" }} </p></li>
 					{% else %}
-					<a href="{% url 'complete' todo.id %}"><li class="list-group-item">{{ todo.text }}</li></a>
+					<a href="{% url 'complete' todo.id %}"><li class="list-group-item">{{ todo.text }} <p class="date-created" style="margin-left: 20px;">Date created - {{ todo.date_created|date:"d F Y" }} </p>
+						<p class="date-created" style="margin-left: 20px;">Date completed - {{ todo.make_up|date:"d F Y" }} </p></li></a>
 					{% endif %}
 				{% endfor %}
 			</ul>

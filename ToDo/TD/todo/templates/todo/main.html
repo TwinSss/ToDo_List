@@ -1,6 +1,5 @@
-{% load static %}
-
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
 	<meta charset="utf-8">
@@ -18,13 +17,15 @@
 	<link rel="stylesheet" href="{% static 'todo/styles.css' %}" />
 </head>	
 <body>
-	{% include 'todo/navbar.html' %}
-	 
+	{% include 'todo/navbar.html' %} 
 	<div class="container-fluid"></div>
     {% block content %}
     
-    {% endblock content %}
-	</div>		
+	{% endblock content %}
+	</div>
+	    <hr>
+	    <h5>Our footer</h5>
+	
 </body>
 
     <!-- Optional JavaScript -->

@@ -27,6 +27,10 @@ body {
 	text-decoration: line-through;
 	background: rgba(149, 165, 166, .3);
 }
+.todo-check {
+	text-decoration: line-through;
+	background: rgb(108, 192, 231);
+}
 footer {
 	margin-top: 20px;
 	color: white;
@@ -38,4 +42,13 @@ footer {
 	font-size: 18px;
 	color: #fff;
 	margin-right: 20px;
+}
+.date-created {
+	color: rgb(108, 192, 231)
+}
+.list-group-item {
+	color: teal;
+}
+.date-completion {
+	color: rgb(182, 179, 179);
 }

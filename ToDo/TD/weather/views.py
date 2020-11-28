@@ -6,6 +6,7 @@ from .forms import CityForm
 from todo.decorators import unauthenticated_user, allowed_users, admin_only
 from django.contrib.auth.decorators import login_required
 from todo.models import Client
+from todo.decorators import unauthenticated_user, allowed_users, admin_only
 
 
 @login_required(login_url='login')

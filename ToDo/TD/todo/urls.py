@@ -11,8 +11,9 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('add', views.addTodo, name='add'),
     path('complete/<todo_id>', views.completeTodo, name='complete'),
+    path('datecomplete', views.dateComplete, name='datecomplete'),
     path('deletecompleted', views.deleteCompleted, name='deletecomplete'),
     path('deleteall', views.deleteAll, name='deleteall'),
 
-    path('customer/<str:pk_test>/', views.customer, name='customer')
+    path('client/', views.client, name='client'),
 ]

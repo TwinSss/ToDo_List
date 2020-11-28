@@ -1,3 +1,4 @@
+import datetime
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_POST
 from django.contrib.auth.forms import UserCreationForm
@@ -19,7 +20,9 @@ def index(request):
 
     todo_list = Todo.objects.filter(client_id=Client.objects.get(name=request.user))
     form = TodoForm()
-    context = {'todo_list': todo_list, 'form': form}
+    date_created = datetime.datetime.now()
+
+    context = {'todo_list': todo_list, 'form': form, 'date_created': date_created }
 
     return render(request, 'todo/index.html', context)
 
@@ -29,9 +32,8 @@ def index(request):
 def addTodo(request):
 
     form = TodoForm(request.POST)
-
     if form.is_valid():
-       new_todo = Todo(text=request.POST['text'], client=Client.objects.get(name=request.user))
+       new_todo = Todo(text=request.POST['text'],make_up=request.POST['make_up'], client=Client.objects.get(name=request.user))
        new_todo.save()
 
     return redirect('index')
@@ -45,6 +47,18 @@ def completeTodo(request, todo_id):
     todo.save()
 
     return redirect('index')
+
+
+@allowed_users(allowed_roles=['admin', 'client'])
+def dateComplete(request):
+
+    todo = Todo.objects.filter(client_id=Client.objects.get(name=request.user))
+    for i in todo:
+        if datetime.date.today() >= i.make_up:
+            i.date_completed = True
+            i.save()
+
+    return redirect('index')    
 
 
 @allowed_users(allowed_roles=['admin', 'client'])
@@ -112,10 +126,7 @@ def logoutUser(request):
 
 
 @allowed_users(allowed_roles=['admin'])
-def customer(request):
-
-    customer = Todo.objects.get(id=pk_test)
-    context = {'customer':customer}
-    return render(request, 'todo/customer.html', context)
+def client(request):
+    return render(request, 'todo/client.html')
 
 
