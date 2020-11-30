@@ -28,8 +28,7 @@ body {
 	background: rgba(149, 165, 166, .3);
 }
 .todo-check {
-	text-decoration: line-through;
-	background: rgb(108, 192, 231);
+	background: rgb(228, 10, 10);
 }
 footer {
 	margin-top: 20px;
